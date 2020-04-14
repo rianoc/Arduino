@@ -64,7 +64,7 @@ void loop(void)
  altitude = (float)44330 * (1 - pow(((float) pressure/p0), 0.190295));
 
  //Send tick
- String serString= (String(temperature*0.1)+ "," +String(DHT11.humidity) + "," +String(lcurr)+ "," +String(int(pressure/100))+ "," +String(altitude));
+ String serString= ("|"+String(temperature*0.1)+ "," +String(DHT11.humidity) + "," +String(lcurr)+ "," +String(int(pressure/100))+ "," +String(altitude)+"|");
  Serial.println(serString);
  Serial.flush();
 }

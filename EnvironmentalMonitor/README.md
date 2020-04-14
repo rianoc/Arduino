@@ -3,12 +3,15 @@
 ## Data captured
 
 Data is published to serial bus once per second as a comma delimited string.
+The `|` act a basic validity check that no characters have been dropped.
 
 Example:
 
 ```csv
-27.20,35,602,1021,-66.64
+|27.20,35,602,1021,-66.64|
 ```
+
+
 
 * Temperature - Celsius
 * Humidity - Percent

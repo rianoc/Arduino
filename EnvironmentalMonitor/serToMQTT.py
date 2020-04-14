@@ -26,16 +26,22 @@ ser = serial.Serial(COM)
 
 def pub():
     data = ser.readline()
-    data = ((data.decode()).strip()).split(',')
-    data = list(map(float, data))
-    if len(data)<5:
-        print("Incomplete message")
+    try:
+     data = data.decode().strip()
+    except:
+        print("Failed to decode message")
         print(data)
         return
-    client.publish("home-assistant/"+room+"/temperature",data[0])
-    client.publish("home-assistant/"+room+"/humidity",data[1])
-    client.publish("home-assistant/"+room+"/light",data[2])
-    client.publish("home-assistant/"+room+"/pressure",data[3])
+    if data[0] == "|" and data[-1] == "|":
+        data = data[1:-1].split(',')
+        data = list(map(float, data))
+        client.publish("home-assistant/"+room+"/temperature",data[0])
+        client.publish("home-assistant/"+room+"/humidity",data[1])
+        client.publish("home-assistant/"+room+"/light",data[2])
+        client.publish("home-assistant/"+room+"/pressure",data[3])
+    else:
+        print("Incomplete message")
+        print(data)
 
 while True:
     pub()

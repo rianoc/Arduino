@@ -11,8 +11,6 @@ Example:
 |27.20,35,602,1021,-66.64|
 ```
 
-
-
 * Temperature - Celsius
 * Humidity - Percent
 * Light - Analog value between 0 and 1023
@@ -24,6 +22,12 @@ Example:
 * DHT11 - temperature + humidity
 * BMP085 - temperature + pressure
 * LDR - light
+
+## Dependencies
+
+```bash
+pip3 install paho-mqtt pyserial
+```
 
 ## Config
 
@@ -39,5 +43,11 @@ Example:
 It takes the name of the serial port and name of the room it is in as parameters.
 
 ```bash
-python serToMQTT.py "/dev/ttyACM0" "livingroom"
+python3 serToMQTT.py "/dev/ttyACM0" "livingroom"
+```
+
+You can subscribe from the command line to confirm your data is publishing to your broker:
+
+```bash
+mosquitto_sub -h 192.168.1.111 -t "home-assistant/#"
 ```

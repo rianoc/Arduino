@@ -16,9 +16,9 @@ def on_connect(client, userdata, flags, rc):
 
 Connected = False
 port = 1883
-COM = sys.argv[1]
-room = sys.argv[2]
-broker_address= sys.argv[3]
+broker_address= sys.argv[1]
+COM = sys.argv[2]
+room = sys.argv[3]
 
 client = mqttClient.Client()
 client.on_connect= on_connect

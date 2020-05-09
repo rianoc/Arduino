@@ -3,12 +3,11 @@
 ## Data captured
 
 Data is published to serial bus once per second as a comma delimited string.
-The `|` act a basic validity check that no characters have been dropped.
 
 Example:
 
 ```csv
-|27.20,35,602,1021,-66.64|
+26.70,35,736,1013,-5.91,26421
 ```
 
 * Temperature - Celsius
@@ -16,6 +15,7 @@ Example:
 * Light - Analog value between 0 and 1023
 * Pressure - Pa
 * Altitude  - m (Not accurate)
+* CRC-16 - checksum of data fields
 
 ## Sensors
 
@@ -26,7 +26,7 @@ Example:
 ## Dependencies
 
 ```bash
-pip3 install paho-mqtt pyserial
+pip3 install paho-mqtt pyserial crcmod
 ```
 
 ## Config
@@ -43,11 +43,11 @@ pip3 install paho-mqtt pyserial
 It takes the name of the serial port and name of the room it is in as parameters.
 
 ```bash
-python3 serToMQTT.py "/dev/ttyACM0" "livingroom"
+python3 serToMQTT.py "192.168.1.111" "/dev/ttyACM0" "livingroom"
 ```
 
 You can subscribe from the command line to confirm your data is publishing to your broker:
 
 ```bash
-mosquitto_sub -h 192.168.1.111 -t "home-assistant/#"
+mosquitto_sub -h 192.168.1.111 -t "hassio/#"
 ```

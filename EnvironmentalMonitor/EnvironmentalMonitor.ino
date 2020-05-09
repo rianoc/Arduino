@@ -4,6 +4,9 @@
 dht11 DHT11;
 #define DHT11PIN 4
 
+//Checksum
+#include <util/crc16.h>
+
 //Light
 int LDR_Pin = A0; //analog pin 0
 
@@ -51,6 +54,17 @@ void loop(void)
   delay(1000);
 }
 //-------------------------------------------------------------
+
+uint16_t calcCRC(char* str)
+{
+  uint16_t crc=0; // starting value as you like, must be the same before each calculation
+  for (int i=0;i<strlen(str);i++) // for each character in the string
+  {
+    crc= _crc16_update (crc, str[i]); // update the crc value
+  }
+  return crc;
+}
+
  void sendTick() {
  //Humidity and temperature
  int chk = DHT11.read(DHT11PIN);
@@ -64,8 +78,11 @@ void loop(void)
  altitude = (float)44330 * (1 - pow(((float) pressure/p0), 0.190295));
 
  //Send tick
- String serString= ("|"+String(temperature*0.1)+ "," +String(DHT11.humidity) + "," +String(lcurr)+ "," +String(int(pressure/100))+ "," +String(altitude)+"|");
- Serial.println(serString);
+ String serString= (String(temperature*0.1)+ "," +String(DHT11.humidity) + "," +String(lcurr)+ "," +String(int(pressure/100))+ "," +String(altitude));
+ int str_len = serString.length() + 1; 
+ char char_array[str_len];
+ serString.toCharArray(char_array, str_len);
+ Serial.println(serString + "," + String(calcCRC(char_array)));
  Serial.flush();
 }
 

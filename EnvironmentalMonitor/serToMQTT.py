@@ -2,6 +2,9 @@ import paho.mqtt.client as mqttClient
 import time
 import serial
 import sys
+import crcmod.predefined
+
+crc16 = crcmod.predefined.mkCrcFun('crc-16')
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -12,10 +15,10 @@ def on_connect(client, userdata, flags, rc):
         print("Connection failed")
 
 Connected = False
-broker_address= "192.168.1.106"
 port = 1883
 COM = sys.argv[1]
 room = sys.argv[2]
+broker_address= sys.argv[3]
 
 client = mqttClient.Client()
 client.on_connect= on_connect
@@ -25,23 +28,28 @@ client.loop_start()
 ser = serial.Serial(COM)
 
 def pub():
-    data = ser.readline()
+    rawdata = ser.readline()
     try:
-     data = data.decode().strip()
+        rawdata = rawdata.decode().strip()
     except:
         print("Failed to decode message")
-        print(data)
+        print(rawdata)
         return
-    if data[0] == "|" and data[-1] == "|":
-        data = data[1:-1].split(',')
-        data = list(map(float, data))
-        client.publish("home-assistant/"+room+"/temperature",data[0])
-        client.publish("home-assistant/"+room+"/humidity",data[1])
-        client.publish("home-assistant/"+room+"/light",data[2])
-        client.publish("home-assistant/"+room+"/pressure",data[3])
-    else:
-        print("Incomplete message")
-        print(data)
+    try:
+        pyCRC = hex(crc16(rawdata[0:rawdata.rfind(',')].encode('utf-8')))
+        data = rawdata.split(',')
+        arduinoCRC = hex(int(data[-1]))
+        if not pyCRC == arduinoCRC:
+            raise Exception("Failed checksum check")
+        data = list(map(float, data[0:4]))
+        client.publish("hassio/"+room+"/temperature",data[0])
+        client.publish("hassio/"+room+"/humidity",data[1])
+        client.publish("hassio/"+room+"/light",data[2])
+        client.publish("hassio/"+room+"/pressure",data[3])
+    except Exception as e:
+        print("Error with data")
+        print(rawdata)
+        print(e)
 
 while True:
     pub()

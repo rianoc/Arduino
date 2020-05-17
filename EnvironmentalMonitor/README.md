@@ -49,7 +49,7 @@ python3 serToMQTT.py "192.168.1.111" "/dev/ttyACM0" "livingroom"
 An alternative to python is the q version`serToMQTT.q` 
 
 ```bash
-q serToMQTT.q "192.168.1.111" "/dev/ttyACM0" "livingroom"
+q serToMQTT.q -q "192.168.1.111" "/dev/ttyACM0" "livingroom"
 ```
 
 You can subscribe from the command line to confirm your data is publishing to your broker:

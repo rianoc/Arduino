@@ -8,14 +8,8 @@ land:{0b sv (.q.and). vs[0b] each(x;y)}
 
 crc16:{
  crc:0;
- {
-  x:xor[x;y];
-  {[x;y]
-   $[(land[x;1])>0;
-     xor[rs[x;1];40961];
-	 rs[x;1]
-	]
-  } over x,til 8 
+ {x:xor[x;y];
+  {[x;y] $[(land[x;1])>0;xor[rs[x;1];40961];rs[x;1]]} over x,til 8
  } over crc,`long$x
  };
 
@@ -41,11 +35,8 @@ pub:{[]
     .mqtt.pub[`$"hassio/",room,"/pressure";data[3]]
    };
    rawdata;
-   {
-    show "Error with data";
-    show x;
-    show y
-   }[rawdata]];
+   {-1 "Error with data: \"",x,"\" '",y}[rawdata]
+  ];
  };
 
 .z.ts:{pub[]}

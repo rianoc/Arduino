@@ -38,6 +38,8 @@ def pub():
     try:
         pyCRC = hex(crc16(rawdata[0:rawdata.rfind(',')].encode('utf-8')))
         data = rawdata.split(',')
+        if not 6 == len(data):
+            raise Exception("Incomplete message")
         arduinoCRC = hex(int(data[-1]))
         if not pyCRC == arduinoCRC:
             raise Exception("Failed checksum check")

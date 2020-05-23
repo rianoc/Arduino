@@ -57,3 +57,54 @@ You can subscribe from the command line to confirm your data is publishing to yo
 ```bash
 mosquitto_sub -h 192.168.1.111 -t "hassio/#"
 ```
+
+## Add as sensors to Home Assistant
+
+Add to `configuration.yaml`:
+
+```yaml
+sensor:
+  platform: mqtt
+  name: "Living Room Temperature"
+  state_topic: "hassio/livingroom/temperature"
+  qos: 0
+  unit_of_measurement: "ºC"
+
+sensor 2:
+  platform: mqtt
+  name: "Living Room Humidity"
+  state_topic: "hassio/livingroom/humidity"
+  qos: 0
+  unit_of_measurement: "%"
+
+sensor 3:
+  platform: mqtt
+  name: "Living Room Pressure"
+  state_topic: "hassio/livingroom/pressure"
+  qos: 0
+  unit_of_measurement: "hPa"
+
+sensor 4:
+  platform: mqtt
+  name: "Living Room Light"
+  state_topic: "hassio/livingroom/light"
+  qos: 0
+  unit_of_measurement: "/1024"
+  ```
+
+### Adding sensors to Lovelace Dashboard
+
+To add to a Lovelace dashboard:
+
+```yaml
+entities:
+  - entity: sensor.living_room_temperature
+  - entity: sensor.living_room_humidity
+  - entity: sensor.living_room_pressure
+  - entity: sensor.living_room_light
+show_icon: true
+show_name: false
+show_state: true
+title: Living Room
+type: glance
+```

@@ -24,6 +24,7 @@ ser:hopen`$":fifo://",COM
 
 pub:{[]
  rawdata:last read0 ser;
+ if[rawdata~"";:(::)];
  @[{
     qCRC:crc16 #[;x] last where x=",";
     data:"," vs x;

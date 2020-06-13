@@ -24,7 +24,7 @@ ser:hopen`$":fifo://",COM
 
 pub:{[]
  rawdata:last read0 ser;
- if[rawdata~"";:(::)];
+ if[any rawdata~/:("";());:(::)];
  @[{
     qCRC:crc16 #[;x] last where x=",";
     data:"," vs x;
@@ -42,5 +42,5 @@ pub:{[]
 
 .z.ts:{pub[]}
 
-\t 5000
+\t 1000
 

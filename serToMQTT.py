@@ -55,4 +55,3 @@ def pub():
 
 while True:
     pub()
-    time.sleep(5)

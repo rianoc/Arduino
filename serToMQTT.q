@@ -18,7 +18,10 @@ broker_address:.z.x[0]
 COM:.z.x[1]
 room:.z.x[2]
 
-.mqtt.conn[`$broker_address,":",string port;`src;()!()]
+.mqtt.disconn:{0N!(`disconn;x);conn::0b}
+
+connect:{.mqtt.conn[`$broker_address,":",string port;`src;()!()];conn::1b}
+connect[]
 
 ser:hopen`$":fifo://",COM
 
@@ -40,7 +43,10 @@ pub:{[]
   ];
  };
 
-.z.ts:{pub[]}
+.z.ts:{
+ if[not conn;connect[]];
+ pub[]
+ }
 
 \t 1000
 

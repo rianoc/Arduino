@@ -21,7 +21,7 @@ sensors:("temperature";"humidity";"light";"pressure");
 
 .mqtt.disconn:{0N!(`disconn;x);conn::0b}
 
-connect:{.mqtt.conn[`$broker_address,":",string port;`src;()!()];conn::1b}
+connect:{.mqtt.conn[`$broker_address,":",string port;`serToMQTT;()!()];conn::1b}
 connect[]
 
 ser:hopen`$":fifo://",COM

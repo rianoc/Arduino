@@ -18,10 +18,11 @@ broker_address:.z.x[0]
 COM:.z.x[1]
 room:.z.x[2]
 sensors:("temperature";"humidity";"light";"pressure");
+clientID:`$ssr[;"-";""] string first 1?0Ng
 
 .mqtt.disconn:{0N!(`disconn;x);conn::0b}
 
-connect:{.mqtt.conn[`$broker_address,":",string port;`serToMQTT;()!()];conn::1b}
+connect:{.mqtt.conn[`$broker_address,":",string port;clientID;()!()];conn::1b}
 connect[]
 
 ser:hopen`$":fifo://",COM

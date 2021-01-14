@@ -26,7 +26,7 @@ Example:
 ## Dependencies
 
 ```bash
-pip3 install paho-mqtt pyserial crcmod
+pip3 install -r requirements.txt
 ```
 
 ## Config

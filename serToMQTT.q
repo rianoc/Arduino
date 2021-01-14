@@ -35,7 +35,7 @@ pub:{[]
     data:"," vs x;
     arduinoCRC:"J"$last data;
     if[not qCRC=arduinoCRC;'"Failed checksum check"];
-    .mqtt.pub'[`$("hassio/",room,"/"),/:sensors;4#data];
+    .mqtt.pub[`$"hassio/",room] .j.j `temperature`humidity`light`pressure!"F"$4#data;
    };
    rawdata;
    {-1 "Error with data: \"",x,"\" '",y}[rawdata]

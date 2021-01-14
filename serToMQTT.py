@@ -44,10 +44,7 @@ def pub():
         if not pyCRC == arduinoCRC:
             raise Exception("Failed checksum check")
         data = list(map(float, data[0:4]))
-        client.publish("hassio/"+room+"/temperature",data[0])
-        client.publish("hassio/"+room+"/humidity",data[1])
-        client.publish("hassio/"+room+"/light",data[2])
-        client.publish("hassio/"+room+"/pressure",data[3])
+        client.publish("hassio/"+room,"{\"temperature\":"+str(data[0])+",\"humidity\":"+str(data[1])+",\"light\":"+str(data[2])+",\"pressure\":"+str(data[3])+"}")
     except Exception as e:
         print("Error with data")
         print(rawdata)

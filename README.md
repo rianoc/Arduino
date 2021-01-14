@@ -66,31 +66,35 @@ Add to `configuration.yaml`:
 sensor:
   platform: mqtt
   name: "Living Room Temperature"
-  state_topic: "hassio/livingroom/temperature"
+  state_topic: "hassio/livingroom"
+  value_template: "{{ value_json.temperature }}"
   qos: 0
   unit_of_measurement: "ºC"
 
 sensor 2:
   platform: mqtt
   name: "Living Room Humidity"
-  state_topic: "hassio/livingroom/humidity"
+  state_topic: "hassio/livingroom"
+  value_template: "{{ value_json.humidity }}"
   qos: 0
   unit_of_measurement: "%"
 
 sensor 3:
   platform: mqtt
   name: "Living Room Pressure"
-  state_topic: "hassio/livingroom/pressure"
+  state_topic: "hassio/livingroom"
+  value_template: "{{ value_json.pressure }}"
   qos: 0
   unit_of_measurement: "hPa"
 
 sensor 4:
   platform: mqtt
   name: "Living Room Light"
-  state_topic: "hassio/livingroom/light"
+  state_topic: "hassio/livingroom"
+  value_template: "{{ value_json.light }}"
   qos: 0
   unit_of_measurement: "/1024"
-  ```
+```
 
 ### Adding sensors to Lovelace Dashboard
 

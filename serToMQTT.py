@@ -3,6 +3,7 @@ import time
 import serial
 import sys
 import crcmod.predefined
+import json
 
 crc16 = crcmod.predefined.mkCrcFun('crc-16')
 
@@ -44,7 +45,8 @@ def pub():
         if not pyCRC == arduinoCRC:
             raise Exception("Failed checksum check")
         data = list(map(float, data[0:4]))
-        client.publish("hassio/"+room,"{\"temperature\":"+str(data[0])+",\"humidity\":"+str(data[1])+",\"light\":"+str(data[2])+",\"pressure\":"+str(data[3])+"}")
+        sensors = ["temperature","humidity","light","pressure"]
+        client.publish("hassio/"+room,json.dumps(dict(zip(sensors, data))))
     except Exception as e:
         print("Error with data")
         print(rawdata)

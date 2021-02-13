@@ -17,7 +17,11 @@ port:1883
 broker_address:.z.x[0]
 COM:.z.x[1]
 room:.z.x[2]
-sensors:("temperature";"humidity";"light";"pressure");
+sensors:([] name:`temperature`humidity`light`pressure;
+            class:`temperature`humidity``pressure;
+            unit:("ºC";"%";"/1023";"hPa");
+            icon:("";"";"white-balance-sunny";""))
+
 clientID:`$ssr[;"-";""] string first 1?0Ng
 
 .mqtt.disconn:{0N!(`disconn;x);conn::0b}
@@ -27,6 +31,20 @@ connect[]
 
 ser:hopen`$":fifo://",COM
 
+configure:{[s]
+  msg:(!). flip (
+   (`name;room,@[;0;upper] string s`name);
+   (`state_topic;"homeassistant/sensor/",room,"/state");
+   (`unit_of_measurement;s`unit);
+   (`value_template;"{{ value_json.",string[s`name],"}}"));
+   if[not null s`class;msg[`device_class]:s`class];
+   if[not ""~s`icon;msg[`icon]:"mdi:",s`icon];
+   topic:`$"homeassistant/sensor/",room,msg[`name],"/config";
+   .mqtt.pubx[topic;;1;1b] .j.j msg;
+ }
+
+configure each sensors;
+
 pub:{[]
  rawdata:last read0 ser;
  if[any rawdata~/:("";());:(::)];
@@ -35,12 +53,12 @@ pub:{[]
     data:"," vs x;
     arduinoCRC:"J"$last data;
     if[not qCRC=arduinoCRC;'"Failed checksum check"];
-    .mqtt.pub[`$"hassio/",room] .j.j `temperature`humidity`light`pressure!"F"$4#data;
+    .mqtt.pub[`$"homeassistant/sensor/",room,"/state"] .j.j sensors[`name]!"F"$4#data;
    };
    rawdata;
    {-1 "Error with data: \"",x,"\" '",y}[rawdata]
   ];
- };
+ }
 
 .z.ts:{
  if[not conn;connect[]];

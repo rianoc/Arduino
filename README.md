@@ -1,5 +1,16 @@
 # Environmental Monitor
 
+* [Environmental Monitor](#environmental-monitor)
+  * [Data captured](#data-captured)
+  * [Sensors](#sensors)
+  * [Dependencies](#dependencies)
+  * [Config](#config)
+  * [Publishing to MQTT](#publishing-to-mqtt)
+  * [Add as sensors to Home Assistant](#add-as-sensors-to-home-assistant)
+    * [q](#q)
+    * [python](#python)
+  * [Adding sensors to Lovelace Dashboard](#adding-sensors-to-lovelace-dashboard)
+
 ## Data captured
 
 Data is published to serial bus once per second as a comma delimited string.
@@ -46,7 +57,7 @@ It takes the name of the serial port and name of the room it is in as parameters
 python3 serToMQTT.py "192.168.1.111" "/dev/ttyACM0" "livingroom"
 ```
 
-An alternative to python is the q version`serToMQTT.q` 
+An alternative to python is the q version `serToMQTT.q`
 
 ```bash
 q serToMQTT.q -q "192.168.1.111" "/dev/ttyACM0" "livingroom"
@@ -55,57 +66,64 @@ q serToMQTT.q -q "192.168.1.111" "/dev/ttyACM0" "livingroom"
 You can subscribe from the command line to confirm your data is publishing to your broker:
 
 ```bash
-mosquitto_sub -h 192.168.1.111 -t "hassio/#"
+mosquitto_sub -h 192.168.1.111 -t "homeassistant/#"
 ```
 
 ## Add as sensors to Home Assistant
 
-Add to `configuration.yaml`:
+### q
+
+[MQTT discovery](https://www.home-assistant.io/docs/mqtt/discovery/) will automatically add these sensors to Home Assistant for you.
+
+### python
+
+Discovery is not enabled, you will need to add to `configuration.yaml`:
 
 ```yaml
 sensor:
   platform: mqtt
-  name: "Living Room Temperature"
-  state_topic: "hassio/livingroom"
+  name: "livingroomTemperature"
+  state_topic: "homeassistant/sensor/livingroom/state"
   value_template: "{{ value_json.temperature }}"
   qos: 0
   unit_of_measurement: "ºC"
 
 sensor 2:
   platform: mqtt
-  name: "Living Room Humidity"
-  state_topic: "hassio/livingroom"
+  name: "livingroomHumidity"
+  state_topic: "homeassistant/sensor/livingroom/state"
   value_template: "{{ value_json.humidity }}"
   qos: 0
   unit_of_measurement: "%"
 
 sensor 3:
   platform: mqtt
-  name: "Living Room Pressure"
-  state_topic: "hassio/livingroom"
+  name: "livingroomPressure"
+  state_topic: "homeassistant/sensor/livingroom/state"
   value_template: "{{ value_json.pressure }}"
   qos: 0
   unit_of_measurement: "hPa"
 
 sensor 4:
   platform: mqtt
-  name: "Living Room Light"
-  state_topic: "hassio/livingroom"
+  name: "livingroomLight"
+  icon: "mdi:white-balance-sunny"
+  state_topic: "homeassistant/sensor/livingroom/state"
   value_template: "{{ value_json.light }}"
   qos: 0
-  unit_of_measurement: "/1024"
+  unit_of_measurement: "/1023"
 ```
 
-### Adding sensors to Lovelace Dashboard
+## Adding sensors to Lovelace Dashboard
 
 To add to a Lovelace dashboard:
 
 ```yaml
 entities:
-  - entity: sensor.living_room_temperature
-  - entity: sensor.living_room_humidity
-  - entity: sensor.living_room_pressure
-  - entity: sensor.living_room_light
+  - entity: sensor.livingroomTemperature
+  - entity: sensor.livingroomHumidity
+  - entity: sensor.livingroomPressure
+  - entity: sensor.livingroomLight
 show_icon: true
 show_name: false
 show_state: true

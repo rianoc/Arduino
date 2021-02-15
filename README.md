@@ -111,7 +111,7 @@ sensor 4:
   state_topic: "homeassistant/sensor/livingroom/state"
   value_template: "{{ value_json.light }}"
   qos: 0
-  unit_of_measurement: "/1023"
+  unit_of_measurement: "/100"
 ```
 
 ## Adding sensors to Lovelace Dashboard

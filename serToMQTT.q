@@ -17,33 +17,54 @@ port:1883
 broker_address:.z.x[0]
 COM:.z.x[1]
 room:.z.x[2]
+
 sensors:([] name:`temperature`humidity`light`pressure;
             class:`temperature`humidity``pressure;
-            unit:("ºC";"%";"/1023";"hPa");
-            icon:("";"";"white-balance-sunny";""))
+            unit:("ºC";"%";"/100";"hPa");
+            icon:("";"";"white-balance-sunny";"");
+            lastPub:4#0Np;
+            lastVal:4#0Nf)
 
 clientID:`$ssr[;"-";""] string first 1?0Ng
 
 .mqtt.disconn:{0N!(`disconn;x);conn::0b}
 
-connect:{.mqtt.conn[`$broker_address,":",string port;clientID;()!()];conn::1b}
+createTemplate:{
+  "{% if value_json.",x," %}{{ value_json.",x," }}{% else %}{{ states('sensor.",room,x,"') }}{% endif %}"
+ }
+
+configure:{[s]
+  msg:(!). flip (
+   (`name;room,string s`name);
+   (`state_topic;"homeassistant/sensor/",room,"/state");
+   (`unit_of_measurement;s`unit);
+   (`value_template;createTemplate string[s`name]));
+   if[not null s`class;msg[`device_class]:s`class];
+   if[not ""~s`icon;msg[`icon]:"mdi:",s`icon];
+   topic:`$"homeassistant/sensor/",msg[`name],"/config";
+   .mqtt.pubx[topic;;1;1b] .j.j msg;
+ }
+
+connect:{
+ .mqtt.conn[`$broker_address,":",string port;clientID;()!()];
+ conn::1b;
+ configure each sensors;
+ }
+
 connect[]
 
 ser:hopen`$":fifo://",COM
 
-configure:{[s]
-  msg:(!). flip (
-   (`name;room,@[;0;upper] string s`name);
-   (`state_topic;"homeassistant/sensor/",room,"/state");
-   (`unit_of_measurement;s`unit);
-   (`value_template;"{{ value_json.",string[s`name],"}}"));
-   if[not null s`class;msg[`device_class]:s`class];
-   if[not ""~s`icon;msg[`icon]:"mdi:",s`icon];
-   topic:`$"homeassistant/sensor/",room,msg[`name],"/config";
-   .mqtt.pubx[topic;;1;1b] .j.j msg;
+filterPub:{[newVals]
+ newVals:@[newVals;2;{`float$floor x%10.23}];
+ now:.z.p;
+ toPub:exec (lastPub<.z.p-0D00:10) or (not lastVal=newVals) from sensors;
+ if[count where toPub;
+    update lastPub:now,lastVal:newVals[where toPub] from `sensors where toPub;
+    msg:.j.j exec name!lastVal from sensors where toPub;
+    .mqtt.pub[`$"homeassistant/sensor/",room,"/state";msg];
+  ];
  }
-
-configure each sensors;
 
 pub:{[]
  rawdata:last read0 ser;
@@ -53,7 +74,7 @@ pub:{[]
     data:"," vs x;
     arduinoCRC:"J"$last data;
     if[not qCRC=arduinoCRC;'"Failed checksum check"];
-    .mqtt.pub[`$"homeassistant/sensor/",room,"/state"] .j.j sensors[`name]!"F"$4#data;
+    filterPub "F"$4#data;
    };
    rawdata;
    {-1 "Error with data: \"",x,"\" '",y}[rawdata]

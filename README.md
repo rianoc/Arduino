@@ -69,6 +69,10 @@ You can subscribe from the command line to confirm your data is publishing to yo
 mosquitto_sub -h 192.168.1.111 -t "homeassistant/#"
 ```
 
+```bash
+mosquitto_sub -h 192.168.1.111 -t "EnvironmentalMonitor/#"
+```
+
 ## Add as sensors to Home Assistant
 
 ### q
@@ -82,33 +86,33 @@ Discovery is not enabled, you will need to add to `configuration.yaml`:
 ```yaml
 sensor:
   platform: mqtt
-  name: "livingroomTemperature"
-  state_topic: "homeassistant/sensor/livingroom/state"
+  name: "livingroomtemperature"
+  state_topic: "EnvironmentalMonitor/livingroom/state"
   value_template: "{{ value_json.temperature }}"
   qos: 0
   unit_of_measurement: "ºC"
 
 sensor 2:
   platform: mqtt
-  name: "livingroomHumidity"
-  state_topic: "homeassistant/sensor/livingroom/state"
+  name: "livingroomhumidity"
+  state_topic: "EnvironmentalMonitor/livingroom/state"
   value_template: "{{ value_json.humidity }}"
   qos: 0
   unit_of_measurement: "%"
 
 sensor 3:
   platform: mqtt
-  name: "livingroomPressure"
-  state_topic: "homeassistant/sensor/livingroom/state"
+  name: "livingroompressure"
+  state_topic: "EnvironmentalMonitor/livingroom/state"
   value_template: "{{ value_json.pressure }}"
   qos: 0
   unit_of_measurement: "hPa"
 
 sensor 4:
   platform: mqtt
-  name: "livingroomLight"
+  name: "livingroomlight"
   icon: "mdi:white-balance-sunny"
-  state_topic: "homeassistant/sensor/livingroom/state"
+  state_topic: "EnvironmentalMonitor/livingroom/state"
   value_template: "{{ value_json.light }}"
   qos: 0
   unit_of_measurement: "/100"
@@ -120,10 +124,10 @@ To add to a Lovelace dashboard:
 
 ```yaml
 entities:
-  - entity: sensor.livingroomTemperature
-  - entity: sensor.livingroomHumidity
-  - entity: sensor.livingroomPressure
-  - entity: sensor.livingroomLight
+  - entity: sensor.livingroomtemperature
+  - entity: sensor.livingroomhumidity
+  - entity: sensor.livingroompressure
+  - entity: sensor.livingroomlight
 show_icon: true
 show_name: false
 show_state: true

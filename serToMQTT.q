@@ -38,7 +38,7 @@ createTemplate:{
 configure:{[s]
   msg:(!). flip (
    (`name;room,string s`name);
-   (`state_topic;"homeassistant/sensor/",room,"/state");
+   (`state_topic;"EnvironmentalMonitor/",room,"/state");
    (`value_template;createTemplate string[s`name]));
    msg,:`_ s`opts;
    topic:`$"homeassistant/sensor/",msg[`name],"/config";
@@ -62,7 +62,7 @@ filterPub:{[newVals]
  if[count where toPub;
     update lastPub:now,lastVal:newVals[where toPub] from `sensors where toPub;
     msg:.j.j exec name!lastVal from sensors where toPub;
-    .mqtt.pub[`$"homeassistant/sensor/",room,"/state";msg];
+    .mqtt.pub[`$"EnvironmentalMonitor/",room,"/state";msg];
   ];
  }
 

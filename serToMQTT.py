@@ -46,7 +46,7 @@ def pub():
             raise Exception("Failed checksum check")
         data = list(map(float, data[0:4]))
         sensors = ["temperature","humidity","light","pressure"]
-        client.publish("hassio/"+room,json.dumps(dict(zip(sensors, data))))
+        client.publish("EnvironmentalMonitor/"+room,json.dumps(dict(zip(sensors, data))))
     except Exception as e:
         print("Error with data")
         print(rawdata)

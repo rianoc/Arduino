@@ -19,11 +19,13 @@ COM:.z.x[1]
 room:.z.x[2]
 
 sensors:([] name:`temperature`humidity`light`pressure;
-            class:`temperature`humidity``pressure;
-            unit:("ºC";"%";"/100";"hPa");
-            icon:("";"";"white-balance-sunny";"");
             lastPub:4#0Np;
-            lastVal:4#0Nf)
+            lastVal:4#0Nf;
+            opts:(``device_class`unit_of_measurement!(::;`temperature;"ºC");
+                  ``device_class`unit_of_measurement!(::;`humidity;"%");
+                  ``unit_of_measurement`icon!(::;"/100";"white-balance-sunny");
+                  ``device_class`unit_of_measurement!(::;`pressure;"hPa"))
+ )
 
 clientID:`$ssr[;"-";""] string first 1?0Ng
 
@@ -37,10 +39,8 @@ configure:{[s]
   msg:(!). flip (
    (`name;room,string s`name);
    (`state_topic;"homeassistant/sensor/",room,"/state");
-   (`unit_of_measurement;s`unit);
    (`value_template;createTemplate string[s`name]));
-   if[not null s`class;msg[`device_class]:s`class];
-   if[not ""~s`icon;msg[`icon]:"mdi:",s`icon];
+   msg,:`_ s`opts;
    topic:`$"homeassistant/sensor/",msg[`name],"/config";
    .mqtt.pubx[topic;;1;1b] .j.j msg;
  }

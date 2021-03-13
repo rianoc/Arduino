@@ -23,7 +23,7 @@ Example:
 
 * Temperature - Celsius
 * Humidity - Percent
-* Light - Analog value between 0 and 1023
+* Light - Analog value between 0 and 100
 * Pressure - Pa
 * Altitude  - m (Not accurate)
 * CRC-16 - checksum of data fields

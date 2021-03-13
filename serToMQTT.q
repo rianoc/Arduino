@@ -56,7 +56,6 @@ connect[]
 ser:hopen`$":fifo://",COM
 
 filterPub:{[newVals]
- newVals:@[newVals;2;{`float$floor x%10.23}];
  now:.z.p;
  toPub:exec (lastPub<.z.p-0D00:10) or (not lastVal=newVals) from sensors;
  if[count where toPub;

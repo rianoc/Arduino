@@ -23,7 +23,7 @@ sensors:([] name:`temperature`humidity`light`pressure;
             lastVal:4#0Nf;
             opts:(``device_class`unit_of_measurement!(::;`temperature;"ºC");
                   ``device_class`unit_of_measurement!(::;`humidity;"%");
-                  ``unit_of_measurement`icon!(::;"/100";"white-balance-sunny");
+                  ``unit_of_measurement`icon!(::;"/100";"mdi:white-balance-sunny");
                   ``device_class`unit_of_measurement!(::;`pressure;"hPa"))
  )
 

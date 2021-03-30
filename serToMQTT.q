@@ -46,7 +46,10 @@ configure:{[s]
  }
 
 connect:{
- .mqtt.conn[`$broker_address,":",string port;clientID;()!()];
+ statusTopic:`$"EnvironmentalMonitor/",room,"/status";
+ opts:`lastWillTopic`lastWillQos`lastWillMessage`lastWillRetain!(statusTopic;2;"offline";1);
+ .mqtt.conn[`$broker_address,":",string port;clientID;opts];
+ .mqtt.pubx[statusTopic;;2;1b] "online";
  conn::1b;
  configure each sensors;
  }

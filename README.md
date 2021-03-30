@@ -4,7 +4,9 @@
   * [Data captured](#data-captured)
   * [Sensors](#sensors)
   * [Dependencies](#dependencies)
-  * [Config](#config)
+    * [Python version](#python-version)
+    * [Arduino](#arduino)
+      * [Config](#config)
   * [Publishing to MQTT](#publishing-to-mqtt)
   * [Add as sensors to Home Assistant](#add-as-sensors-to-home-assistant)
     * [q](#q)
@@ -36,16 +38,22 @@ Example:
 
 ## Dependencies
 
+### Python version
+
 ```bash
 pip3 install -r requirements.txt
 ```
 
-## Config
+### Arduino
+
+* [DHT sensor library](https://github.com/adafruit/DHT-sensor-library)
+* [Adafruit BMP085 Unified](https://github.com/adafruit/Adafruit_BMP085_Unified)
+
+#### Config
 
 * Serial - `9600`
 * LDR - `A0`
 * DHT11 - `4`
-* BMP085 - `0x77`
 
 ## Publishing to MQTT
 
